@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HQ Health AI 🥗🤖
 
-## Getting Started
+HQ Health AI is an AI-powered nutrition companion designed to reduce daily food decision fatigue.
 
-First, run the development server:
+Instead of manually tracking calories or searching recipes every day, the app helps users make smarter health decisions with AI-assisted meal planning and nutrition guidance.
+
+---
+
+## ✨ Features
+
+### Authentication
+
+* User Signup
+* User Login
+* JWT Authentication (DRF)
+
+### Nutrition Features (Planned)
+
+* AI meal generation
+* Personalized Indian vegetarian meal suggestions
+* Grocery list generation
+* Daily nutrition tracking
+* AI health assistant chat
+* Progress dashboard
+* Cricket/workout mode adjustments
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+* Next.js
+* Tailwind CSS
+* Lucide React
+
+### Backend
+
+* Django
+* Django REST Framework
+* PostgreSQL
+* Redis
+* Celery
+
+### AI
+
+* Gemini API
+
+---
+
+## 📱 UI Highlights
+
+* Mobile-first responsive design
+* Desktop sidebar navigation
+* Mobile bottom navigation
+* Clean wellness-focused UI
+
+---
+
+## 🚀 Project Status
+
+Currently working on:
+
+* Authentication flow
+* Responsive dashboard
+* DRF API integration
+
+Upcoming:
+
+* AI-powered meal generation
+* Health tracking system
+* Grocery recommendation engine
+
+---
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+src/
+ ├── app/
+ ├── components/
+ ├── lib/
+ ├── services/
+ ├── store/
+ └── utils/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚡ Running Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Frontend
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Backend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+DRF - under development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🎯 Vision
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The goal of HQ Health AI is simple:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Help users make healthier decisions without overthinking food daily.
+
+---
+
+## 📌 Build In Public
+
+Building this project publicly while learning and improving the product step by step 🚀
