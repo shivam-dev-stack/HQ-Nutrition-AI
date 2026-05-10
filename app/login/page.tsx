@@ -1,89 +1,47 @@
 "use client";
+import Logo from "@/src/components/logo";
+import React, {useState} from "react";
+import api from "@/src/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle login logic here, e.g., call API to authenticate user
+    try {
+      // Example API call (replace with actual endpoint and logic)
+      const response = await api.post("/api/login/", formData);
+
+      console.log("Login successful:", response.data);
+      router.push("/dashboard");
+      // Redirect to dashboard or home page after successful login
+    } catch (error) {
+      console.error("Login failed:", error.response ? error.response.data : error.message);
+    }
+    console.log("Form submitted:", formData);
+  }
+
   return (
     <div>
       <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto  sm:w-full sm:max-w-sm">
-          <div className="w-40 mx-auto">
-            <svg
-              width="400"
-              height="160"
-              viewBox="0 0 1200 320"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <linearGradient id="greenGradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#22C55E" />
-                  <stop offset="100%" stopColor="#16A34A" />
-                </linearGradient>
-
-                <linearGradient id="darkGradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#111827" />
-                  <stop offset="100%" stopColor="#1F2937" />
-                </linearGradient>
-
-                <filter
-                  id="shadow"
-                  x="-50%"
-                  y="-50%"
-                  width="200%"
-                  height="200%"
-                >
-                  <feDropShadow
-                    dx="0"
-                    dy="8"
-                    stdDeviation="10"
-                    floodColor="#000000"
-                    floodOpacity="0.15"
-                  />
-                </filter>
-              </defs>
-
-              <g transform="translate(50,50)" filter="url(#shadow)">
-                <rect
-                  x="0"
-                  y="0"
-                  width="220"
-                  height="220"
-                  rx="48"
-                  fill="url(#greenGradient)"
-                />
-
-                <path
-                  d="M110 48C75 48 52 74 52 108C52 141 76 168 108 168C140 168 164 142 164 110C164 78 140 48 110 48Z"
-                  fill="white"
-                  opacity="0.95"
-                />
-
-                <path
-                  d="M110 70C95 92 88 112 92 136C122 128 142 103 146 74C132 70 122 68 110 70Z"
-                  fill="#22C55E"
-                />
-
-                <circle cx="72" cy="92" r="6" fill="#111827" />
-                <circle cx="150" cy="132" r="6" fill="#111827" />
-                <line
-                  x1="78"
-                  y1="92"
-                  x2="120"
-                  y2="84"
-                  stroke="#111827"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-                <line
-                  x1="126"
-                  y1="88"
-                  x2="144"
-                  y2="126"
-                  stroke="#111827"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-              </g>
-            </svg>
+          <div className="w-40 mr-20 mx-auto">
+            <Logo />
           </div>
 
           <h2 className="mt-2 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
@@ -95,21 +53,22 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form action="#" onSubmit={handleSubmit} method="POST" className="space-y-6">
             <div>
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="block text-sm/6 font-medium text-gray-500"
               >
-                Email address
+                Username
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  type="email"
-                  name="email"
+                  id="username"
+                  type="name"
+                  name="username"
+                  onChange={handleChange}
                   required
-                  autoComplete="email"
+                  autoComplete="username"
                   className="
 block w-full rounded-xl border border-gray-300
 px-4 py-3 text-gray-900
@@ -142,6 +101,7 @@ focus:outline-none focus:ring-2 focus:ring-green-500
                   id="password"
                   type="password"
                   name="password"
+                  onChange={handleChange}
                   required
                   autoComplete="current-password"
                   className="
