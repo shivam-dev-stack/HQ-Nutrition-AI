@@ -3,6 +3,7 @@ import Logo from "@/src/components/logo";
 import React, {useState} from "react";
 import api from "@/src/lib/api";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
 
@@ -37,104 +38,128 @@ export default function LoginPage() {
   }
 
   return (
-    <div>
-      <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto  sm:w-full sm:max-w-sm">
-          <div className="w-40 mr-20 mx-auto">
-            <Logo />
-          </div>
-
-          <h2 className="mt-2 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="text-center text-gray-500 mt-2">
-            Continue your health journey
-          </p>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" onSubmit={handleSubmit} method="POST" className="space-y-6">
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm/6 font-medium text-gray-500"
-              >
-                Username
-              </label>
-              <div className="mt-2">
-                <input
-                  id="username"
-                  type="name"
-                  name="username"
-                  onChange={handleChange}
-                  required
-                  autoComplete="username"
-                  className="
-block w-full rounded-xl border border-gray-300
-px-4 py-3 text-gray-900
-placeholder:text-gray-400
-focus:outline-none focus:ring-2 focus:ring-green-500
-"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm/6 font-medium text-gray-500"
-                >
-                  Password
-                </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-green-400 hover:text-green-300"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  required
-                  autoComplete="current-password"
-                  className="
-block w-full rounded-xl border border-gray-300
-px-4 py-3 text-gray-900
-placeholder:text-gray-400
-focus:outline-none focus:ring-2 focus:ring-green-500
-"
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-green-500 px-3 py-3 text-sm/6 font-semibold text-white hover:bg-green-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
-
-          <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Not a member?
-            <a
-              href="#"
-              className="font-semibold text-green-400 hover:text-green-300"
-            >
-              {" "}SignUp
-            </a>
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-white to-green-50 flex items-center justify-center px-4 py-8">
+  <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 sm:p-8">
+    
+    {/* Logo */}
+    <div className="flex justify-center">
+      <div className="w-28 sm:w-36">
+        <Logo />
       </div>
     </div>
+
+    {/* Heading */}
+    <div className="mt-4 text-center">
+      <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+        Sign in to your account
+      </h2>
+
+      <p className="mt-2 text-sm sm:text-base text-gray-500">
+        Continue your health journey
+      </p>
+    </div>
+
+    {/* Form */}
+    <form
+      onSubmit={handleSubmit}
+      method="POST"
+      className="mt-8 space-y-5"
+    >
+      {/* Username */}
+      <div>
+        <label
+          htmlFor="username"
+          className="block text-sm font-medium text-gray-600"
+        >
+          Username
+        </label>
+
+        <div className="mt-2">
+          <input
+            id="username"
+            type="text"
+            name="username"
+            onChange={handleChange}
+            required
+            autoComplete="username"
+            placeholder="Enter username"
+            className="
+              block w-full rounded-xl border border-gray-300
+              px-4 py-3 text-gray-900
+              placeholder:text-gray-400
+              focus:outline-none focus:ring-2 focus:ring-green-500
+              transition
+            "
+          />
+        </div>
+      </div>
+
+      {/* Password */}
+      <div>
+        <div className="flex items-center justify-between">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-600"
+          >
+            Password
+          </label>
+
+          <a
+            href="#"
+            className="text-sm font-medium text-green-500 hover:text-green-400"
+          >
+            Forgot password?
+          </a>
+        </div>
+
+        <div className="mt-2">
+          <input
+            id="password"
+            type="password"
+            name="password"
+            onChange={handleChange}
+            required
+            autoComplete="current-password"
+            placeholder="Enter password"
+            className="
+              block w-full rounded-xl border border-gray-300
+              px-4 py-3 text-gray-900
+              placeholder:text-gray-400
+              focus:outline-none focus:ring-2 focus:ring-green-500
+              transition
+            "
+          />
+        </div>
+      </div>
+
+      {/* Button */}
+      <button
+        type="submit"
+        className="
+          w-full rounded-xl bg-green-500
+          px-4 py-3
+          text-sm sm:text-base font-semibold text-white
+          hover:bg-green-600
+          active:scale-[0.98]
+          transition-all duration-200
+          shadow-md
+        "
+      >
+        Sign in
+      </button>
+    </form>
+
+    {/* Footer */}
+    <p className="mt-8 text-center text-sm text-gray-500">
+      Not a member?
+      <Link
+        href="/signup"
+        className="ml-1 font-semibold text-green-500 hover:text-green-400"
+      >
+        Sign Up
+      </Link>
+    </p>
+  </div>
+</div>
   );
 }

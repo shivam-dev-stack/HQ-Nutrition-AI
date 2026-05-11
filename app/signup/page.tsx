@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import api from "@/src/lib/api";
 import { useRouter } from "next/navigation";
 import Logo from "@/src/components/logo";
+import Link from "next/link";
 
 
 export default function SignupPage() {
@@ -39,145 +40,182 @@ export default function SignupPage() {
     console.log("Form submitted:", formData);
   }
   return (
-    <div>
-      <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto  sm:w-full sm:max-w-sm">
-          <div className="w-40 mr-20 mx-auto">
-            <Logo />
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-white to-green-50 flex items-center justify-center px-4 py-8">
+  <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 sm:p-8">
 
-          <h2 className="mt-2 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Start your health journey
-          </h2>
-
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm/6 font-medium text-gray-500"
-              >
-                Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="name"
-                  type="text"
-                  name="username"
-                  required
-                  autoComplete="name"
-                  onChange={handleChange}
-                  className="
-                    block w-full rounded-xl border border-gray-300
-                    px-4 py-3 text-gray-900
-                    placeholder:text-gray-400
-                    focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm/6 font-medium text-gray-500"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  required
-                  autoComplete="email"
-                  className="
-                    block w-full rounded-xl border border-gray-300
-                    px-4 py-3 text-gray-900
-                    placeholder:text-gray-400
-                    focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm/6 font-medium text-gray-500"
-                >
-                  Password
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  required
-                  autoComplete="new-password"
-                  className="
-                    block w-full rounded-xl border border-gray-300
-                    px-4 py-3 text-gray-900
-                    placeholder:text-gray-400
-                    focus:outline-none focus:ring-2 focus:ring-green-500
-                    "
-                />
-              </div>
-              <p className="mt-1 text-sm text-gray-400">Minimum 8 characters</p>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm/6 font-medium text-gray-500"
-                >
-                  Confirm Password
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  name="confirmPassword"
-                  onChange={handleChange}
-                  required
-                  autoComplete="new-password"
-                  className="
-                    block w-full rounded-xl border border-gray-300
-                    px-4 py-3 text-gray-900
-                    placeholder:text-gray-400
-                    focus:outline-none focus:ring-2 focus:ring-green-500
-                    "
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-green-500 px-3 py-3 text-sm/6 font-semibold text-white hover:bg-green-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
-              >
-                Create Account
-              </button>
-            </div>
-          </form>
-
-          <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Already a member?
-            <a
-              href="#"
-              className="font-semibold text-green-400 hover:text-green-300"
-            >
-              {" "} Login
-            </a>
-          </p>
-        </div>
+    {/* Logo */}
+    <div className="flex justify-center">
+      <div className="w-28 sm:w-36">
+        <Logo />
       </div>
     </div>
+
+    {/* Heading */}
+    <div className="mt-4 text-center">
+      <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+        Start your health journey
+      </h2>
+
+      <p className="mt-2 text-sm sm:text-base text-gray-500">
+        Create your personalized wellness account
+      </p>
+    </div>
+
+    {/* Form */}
+    <form
+      action="#"
+      method="POST"
+      onSubmit={handleSubmit}
+      className="mt-8 space-y-5"
+    >
+      {/* Name */}
+      <div>
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-600"
+        >
+          Name
+        </label>
+
+        <div className="mt-2">
+          <input
+            id="name"
+            type="text"
+            name="username"
+            required
+            autoComplete="name"
+            onChange={handleChange}
+            placeholder="Enter your name"
+            className="
+              block w-full rounded-xl border border-gray-300
+              px-4 py-3 text-gray-900
+              placeholder:text-gray-400
+              focus:outline-none focus:ring-2 focus:ring-green-500
+              transition
+            "
+          />
+        </div>
+      </div>
+
+      {/* Email */}
+      <div>
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-600"
+        >
+          Email address
+        </label>
+
+        <div className="mt-2">
+          <input
+            id="email"
+            type="email"
+            name="email"
+            onChange={handleChange}
+            required
+            autoComplete="email"
+            placeholder="Enter your email"
+            className="
+              block w-full rounded-xl border border-gray-300
+              px-4 py-3 text-gray-900
+              placeholder:text-gray-400
+              focus:outline-none focus:ring-2 focus:ring-green-500
+              transition
+            "
+          />
+        </div>
+      </div>
+
+      {/* Password */}
+      <div>
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-600"
+        >
+          Password
+        </label>
+
+        <div className="mt-2">
+          <input
+            id="password"
+            type="password"
+            name="password"
+            onChange={handleChange}
+            required
+            autoComplete="new-password"
+            placeholder="Create password"
+            className="
+              block w-full rounded-xl border border-gray-300
+              px-4 py-3 text-gray-900
+              placeholder:text-gray-400
+              focus:outline-none focus:ring-2 focus:ring-green-500
+              transition
+            "
+          />
+        </div>
+
+        <p className="mt-1 text-xs text-gray-400">
+          Minimum 8 characters
+        </p>
+      </div>
+
+      {/* Confirm Password */}
+      <div>
+        <label
+          htmlFor="confirmPassword"
+          className="block text-sm font-medium text-gray-600"
+        >
+          Confirm Password
+        </label>
+
+        <div className="mt-2">
+          <input
+            id="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            onChange={handleChange}
+            required
+            autoComplete="new-password"
+            placeholder="Confirm password"
+            className="
+              block w-full rounded-xl border border-gray-300
+              px-4 py-3 text-gray-900
+              placeholder:text-gray-400
+              focus:outline-none focus:ring-2 focus:ring-green-500
+              transition
+            "
+          />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="
+          w-full rounded-xl bg-green-500
+          px-4 py-3
+          text-sm sm:text-base font-semibold text-white
+          hover:bg-green-600
+          active:scale-[0.98]
+          transition-all duration-200
+          shadow-md
+        "
+      >
+        Create Account
+      </button>
+    </form>
+
+    {/* Footer */}
+    <p className="mt-8 text-center text-sm text-gray-500">
+      Already a member?
+      <Link
+        href="/login"
+        className="ml-1 font-semibold text-green-500 hover:text-green-400"
+      >
+        Login
+      </Link>
+    </p>
+  </div>
+</div>
   );
 }
