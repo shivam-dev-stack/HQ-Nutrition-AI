@@ -74,7 +74,7 @@ export default function SignupPage() {
           htmlFor="name"
           className="block text-sm font-medium text-gray-600"
         >
-          Name
+          Username
         </label>
 
         <div className="mt-2">
@@ -85,7 +85,7 @@ export default function SignupPage() {
             required
             autoComplete="name"
             onChange={handleChange}
-            placeholder="Enter your name"
+            placeholder="Username"
             className="
               block w-full rounded-xl border border-gray-300
               px-4 py-3 text-gray-900
