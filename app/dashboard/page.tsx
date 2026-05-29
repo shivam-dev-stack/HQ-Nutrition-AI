@@ -9,7 +9,9 @@ import chilla from "@/src/assets/chilla.png";
 
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-gray-50 pb-24 p-4">
+    <main className="min-h-screen bg-gray-50 py-10">
+
+      <div className="mx-10 ">
 
       <section className="bg-white rounded-3xl border p-6 shadow-sm">
         <h1 className="text-3xl font-bold mb-8">👋 Hi Shivam!</h1>
@@ -90,7 +92,7 @@ export default function DashboardPage() {
             </span>
           </div>
 
-          <button className="rounded-full bg-green-600 px-6 py-3 text-white font-semibold">
+          <button className="rounded-full bg-green-600 px-6 py-3 hover:cursor-pointer text-white font-semibold">
             Go
           </button>
         </div>
@@ -100,7 +102,7 @@ export default function DashboardPage() {
           <Tag text="#Low-Calorie" />
           <Tag text="#High-Pro" />
 
-          <button className="h-10 w-10 rounded-full border flex items-center justify-center">
+          <button className="h-10 w-10 hover:cursor-pointer rounded-full border flex items-center justify-center">
             <ChevronRight size={18} />
           </button>
         </div>
@@ -145,7 +147,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      
+      </div>
     </main>
   );
 }
