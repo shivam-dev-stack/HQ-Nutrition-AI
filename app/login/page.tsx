@@ -27,6 +27,8 @@ export default function LoginPage() {
     try {
       // Example API call (replace with actual endpoint and logic)
       const response = await api.post("/api/login/", formData);
+      const { access } = response.data;
+      localStorage.setItem("access", access);
 
       console.log("Login successful:", response.data);
       router.push("/dashboard");

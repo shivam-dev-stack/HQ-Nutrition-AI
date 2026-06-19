@@ -3,8 +3,42 @@ import { ChevronRight, Flame, Clock3 } from "lucide-react";
 import Image from "next/image";
 import chilla from "@/src/assets/chilla.png";
 import Link from "next/link";
+import api from "@/src/lib/api";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function DashboardPage() {
+  const router = useRouter();
+
+  async function callProfile() {
+  // 1. Safely check if window exists before accessing localStorage
+  const isBrowser = typeof window !== 'undefined';
+  const token = isBrowser ? localStorage.getItem("access") : null;
+
+  // 2. Early return or throw if token is missing
+  if (!token) {
+    console.warn("No access token found or executing on the server.");
+    return; 
+  }
+
+  try {
+    const profile = await axios.get("http://localhost:8000/api/profile/", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Profile data:", profile.data);
+    if (!profile.data.name || !profile.data.age || !profile.data.weight || !profile.data.height || !profile.data.activity_level) {
+      router.push("/dashboard/profile");
+    }
+    
+  } catch (error) {
+    console.error("Profile fetch failed:", error);
+  }
+}
+
+  callProfile();
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-6 pb-32 lg:pb-8">
@@ -13,8 +47,10 @@ export default function DashboardPage() {
 
           <div className="flex justify-center">
             <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-square mx-auto">
-              <svg viewBox="0 0 288 288"
-  className="block h-full w-full -rotate-90">
+              <svg
+                viewBox="0 0 288 288"
+                className="block h-full w-full -rotate-90"
+              >
                 <circle
                   cx="144"
                   cy="144"
@@ -113,11 +149,13 @@ export default function DashboardPage() {
           </div>
 
           <div className="space-y-6">
-            <section className="bg-white 
+            <section
+              className="bg-white 
             rounded-3xl border 
             p-6 shadow-sm mt-6 
             bg-gradient-to-br
-          from-yellow-100 to-orange-100">
+          from-yellow-100 to-orange-100"
+            >
               <h2 className="text-2xl font-bold mb-5">🍱 TODAY'S SUGGESTION</h2>
 
               <div className="overflow-hidden rounded-2xl border">
