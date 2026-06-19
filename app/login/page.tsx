@@ -41,14 +41,14 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-b from-white to-green-50 flex items-center justify-center px-4 py-8">
   <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 sm:p-8">
     
-    {/* Logo */}
+  
     <div className="flex justify-center">
       <div className="w-28 sm:w-36">
         <Logo />
       </div>
     </div>
 
-    {/* Heading */}
+  
     <div className="mt-4 text-center">
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
         Sign in to your account
@@ -59,13 +59,13 @@ export default function LoginPage() {
       </p>
     </div>
 
-    {/* Form */}
+
     <form
       onSubmit={handleSubmit}
       method="POST"
       className="mt-8 space-y-5"
     >
-      {/* Username */}
+
       <div>
         <label
           htmlFor="username"
@@ -149,7 +149,7 @@ export default function LoginPage() {
       </button>
     </form>
 
-    {/* Footer */}
+  
     <p className="mt-8 text-center text-sm text-gray-500">
       Not a member?
       <Link

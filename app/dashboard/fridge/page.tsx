@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef } from "react";
 import { Search, Sparkles, CheckCircle2, Camera } from "lucide-react";
+import Image from "next/image";
 
 // Mock Data for Ingredients
 const INGREDIENTS_DATA = {
@@ -24,6 +25,10 @@ const INGREDIENTS_DATA = {
 
 export default function Fridge() {
   const [selected, setSelected] = useState([]);
+ const [preview, setPreview] = useState<string | null>(null);
+const [selectedFile, setSelectedFile] = useState<File | null>(null);
+const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleIngredient = (id) => {
     if (selected.includes(id)) {
@@ -33,11 +38,56 @@ export default function Fridge() {
     }
   };
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  
 
   const handleCameraClick = () => {
-    fileInputRef.current?.click();
-  };
+  console.log("Camera clicked");
+  fileInputRef.current?.click();
+};
+
+  
+
+const handleImageSelect = (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  const file = e.target.files?.[0];
+
+  console.log("FILE:", file);
+
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+
+  console.log("URL:", url);
+
+  setPreview(url);
+};
+
+const handleAnalyze = async () => {
+  if (!selectedFile) return;
+
+  try {
+    setIsAnalyzing(true);
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    const response = await fetch("/api/ocr", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    setPreview(null);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsAnalyzing(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-emerald-50/30 text-slate-800">
@@ -55,9 +105,8 @@ export default function Fridge() {
                 lg:top-6
                 lg:h-fit
                 lg:border
-                lg:shadow-sm
-"
-          >
+                lg:shadow-sm">
+
             <h1 className="text-xl font-bold tracking-tight mb-3">
               🥕 My Smart Fridge
             </h1>
@@ -89,8 +138,8 @@ export default function Fridge() {
             {Object.entries(INGREDIENTS_DATA).map(([category, items]) => (
               <div key={category}>
                 <h2 className="mx-5 mb-4 text-sm font-bold text-slate-600">
-  {category}
-</h2>
+                  {category}
+                </h2>
 
                 <div
                   className="mx-5 grid
@@ -99,8 +148,7 @@ export default function Fridge() {
                               md:grid-cols-4
                               xl:grid-cols-5
                               2xl:grid-cols-6
-                              gap-4"
-                >
+                              gap-4">
                   {items.map((item) => {
                     const isSelected = selected.includes(item.id);
                     return (
@@ -108,22 +156,22 @@ export default function Fridge() {
                         key={item.id}
                         onClick={() => toggleIngredient(item.id)}
                         className={`group
-  p-4
-  rounded-2xl
-  flex
-  flex-col
-  items-center
-  justify-center
-  border
-  relative
-  transition-all
-  duration-200
-  ${
-    isSelected
-      ? "bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-500 shadow-md scale-[0.98]"
-      : "bg-white border-slate-200 hover:border-emerald-300 hover:shadow-md"
-  }
-`}
+                                      p-4
+                                      rounded-2xl
+                                      flex
+                                      flex-col
+                                      items-center
+                                      justify-center
+                                      border
+                                      relative
+                                      transition-all
+                                      duration-200
+                                      ${
+                                        isSelected
+                                          ? "bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-500 shadow-md scale-[0.98]"
+                                          : "bg-white border-slate-200 hover:border-emerald-300 hover:shadow-md"
+                                      }
+                                    `}
                       >
                         {/* Checkmark badge for selected items */}
                         {isSelected && (
@@ -178,13 +226,65 @@ export default function Fridge() {
 
                     hover:scale-105
                     active:scale-95
-                    transition-all
-                  "
-          >
+                    transition-all">
             <Camera size={28} />
           </button>
 
-          {/* STICKY BOTTOM GENERATE BUTTON */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={handleImageSelect} />
+
+{preview && (
+  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    
+    <div className="bg-white rounded-3xl overflow-hidden max-w-md w-full">
+      
+      <img
+        src={preview}
+        alt="Fridge Preview"
+        className="w-full h-80 object-cover"
+      />
+
+      <div className="p-4 space-y-3">
+        <h3 className="font-bold text-lg">
+          Analyze Fridge Photo?
+        </h3>
+
+        <p className="text-sm text-slate-500">
+          We'll detect ingredients automatically.
+        </p>
+        <div className="flex gap-3">
+          
+          <button
+            onClick={() => {
+              setPreview(null);
+              setSelectedFile(null);
+            }}
+            className="flex-1 py-3 rounded-xl border border-slate-200 font-semibold"
+          >
+            Retake
+          </button>
+
+          <button
+            onClick={handleAnalyze}
+            disabled={isAnalyzing}
+            className="flex-1 py-3 rounded-xl bg-emerald-600 text-white font-semibold"
+          >
+            {isAnalyzing
+              ? "Analyzing..."
+              : "Analyze"}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
           {selected.length > 0 && (
             <div className="fixed bottom-16 left-0 right-0 p-4 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent pt-8">
               <button className="w-full bg-slate-900 text-white p-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-all active:scale-[0.98] animate-bounce-subtle">
@@ -193,6 +293,7 @@ export default function Fridge() {
               </button>
             </div>
           )}
+
         </div>
       </div>
     </div>

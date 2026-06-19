@@ -43,14 +43,12 @@ export default function SignupPage() {
     <div className="min-h-screen bg-gradient-to-b from-white to-green-50 flex items-center justify-center px-4 py-8">
   <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 sm:p-8">
 
-    {/* Logo */}
     <div className="flex justify-center">
       <div className="w-28 sm:w-36">
         <Logo />
       </div>
     </div>
 
-    {/* Heading */}
     <div className="mt-4 text-center">
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
         Start your health journey
@@ -61,14 +59,13 @@ export default function SignupPage() {
       </p>
     </div>
 
-    {/* Form */}
     <form
       action="#"
       method="POST"
       onSubmit={handleSubmit}
       className="mt-8 space-y-5"
     >
-      {/* Name */}
+   
       <div>
         <label
           htmlFor="name"
@@ -97,7 +94,6 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/* Email */}
       <div>
         <label
           htmlFor="email"
@@ -126,7 +122,6 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/* Password */}
       <div>
         <label
           htmlFor="password"
@@ -159,7 +154,7 @@ export default function SignupPage() {
         </p>
       </div>
 
-      {/* Confirm Password */}
+
       <div>
         <label
           htmlFor="confirmPassword"
@@ -188,7 +183,6 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         className="
@@ -205,13 +199,9 @@ export default function SignupPage() {
       </button>
     </form>
 
-    {/* Footer */}
     <p className="mt-8 text-center text-sm text-gray-500">
       Already a member?
-      <Link
-        href="/login"
-        className="ml-1 font-semibold text-green-500 hover:text-green-400"
-      >
+      <Link href="/login" className="ml-1 font-semibold text-green-500 hover:text-green-400">
         Login
       </Link>
     </p>
