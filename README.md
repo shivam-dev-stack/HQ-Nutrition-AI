@@ -6,7 +6,7 @@ Instead of manually tracking calories or searching recipes every day, the app he
 
 ---
 
-## ✨ Features
+## Features
 
 ### Authentication
 
@@ -26,7 +26,7 @@ Instead of manually tracking calories or searching recipes every day, the app he
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -48,7 +48,7 @@ Instead of manually tracking calories or searching recipes every day, the app he
 
 ---
 
-## 📱 UI Highlights
+## UI Highlights
 
 * Mobile-first responsive design
 * Desktop sidebar navigation
@@ -57,7 +57,7 @@ Instead of manually tracking calories or searching recipes every day, the app he
 
 ---
 
-## 🚀 Project Status
+## Project Status
 
 Currently working on:
 
@@ -73,7 +73,7 @@ Upcoming:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 src/
@@ -87,7 +87,7 @@ src/
 
 ---
 
-## ⚡ Running Locally
+## Running Locally
 
 ### Frontend
 
@@ -102,7 +102,7 @@ DRF - under development
 
 ---
 
-## 🎯 Vision
+## Vision
 
 The goal of HQ Health AI is simple:
 
@@ -110,7 +110,7 @@ The goal of HQ Health AI is simple:
 
 ---
 
-## 📌 Build In Public
+## Build In Public
 
 Building this project publicly while learning and improving the product step by step 🚀
 **clone repo and run npm i**
