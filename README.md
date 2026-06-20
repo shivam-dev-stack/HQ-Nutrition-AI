@@ -113,3 +113,4 @@ The goal of HQ Health AI is simple:
 ## 📌 Build In Public
 
 Building this project publicly while learning and improving the product step by step 🚀
+**clone repo and run npm i**

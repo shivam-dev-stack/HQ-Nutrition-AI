@@ -1,9 +1,7 @@
 "use client";
-import React, { useState, useRef } from "react";
-import { Search, Sparkles, CheckCircle2, Camera } from "lucide-react";
-import Image from "next/image";
+import { useState, useRef } from "react";
+import { Search, Sparkles, CheckCircle2, Camera, X, Loader2 } from "lucide-react";
 
-// Mock Data for Ingredients
 const INGREDIENTS_DATA = {
   "Veggies & Fruits": [
     { id: "tomato", name: "Tomato", emoji: "🍅" },
@@ -25,10 +23,11 @@ const INGREDIENTS_DATA = {
 
 export default function Fridge() {
   const [selected, setSelected] = useState([]);
- const [preview, setPreview] = useState<string | null>(null);
-const [selectedFile, setSelectedFile] = useState<File | null>(null);
-const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const fileInputRef = useRef(null);
 
   const toggleIngredient = (id) => {
     if (selected.includes(id)) {
@@ -38,264 +37,220 @@ const [isAnalyzing, setIsAnalyzing] = useState(false);
     }
   };
 
-  
-
   const handleCameraClick = () => {
-  console.log("Camera clicked");
-  fileInputRef.current?.click();
-};
+    fileInputRef.current?.click();
+  };
 
-  
+  const handleImageSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-const handleImageSelect = (
-  e: React.ChangeEvent<HTMLInputElement>
-) => {
-  const file = e.target.files?.[0];
+    setSelectedFile(file); // FIXED: Added missing state update so handleAnalyze can work
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+  };
 
-  console.log("FILE:", file);
+  const handleAnalyze = async () => {
+    if (!selectedFile) return;
 
-  if (!file) return;
+    try {
+      setIsAnalyzing(true);
+      const formData = new FormData();
+      formData.append("image", selectedFile);
 
-  const url = URL.createObjectURL(file);
+      const response = await fetch("/api/ocr", {
+        method: "POST",
+        body: formData,
+      });
 
-  console.log("URL:", url);
+      const data = await response.json();
+      console.log("OCR Response:", data);
 
-  setPreview(url);
-};
+      // Auto-select detected ingredients if returned in an array format
+      if (data.ingredients) {
+        setSelected((prev) => [...new Set([...prev, ...data.ingredients])]);
+      }
 
-const handleAnalyze = async () => {
-  if (!selectedFile) return;
-
-  try {
-    setIsAnalyzing(true);
-
-    const formData = new FormData();
-    formData.append("image", selectedFile);
-
-    const response = await fetch("/api/ocr", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
-
-    console.log(data);
-
-    setPreview(null);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setIsAnalyzing(false);
-  }
-};
+      setPreview(null);
+      setSelectedFile(null);
+    } catch (error) {
+      console.error("Analysis Error:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-emerald-50/30 text-slate-800">
-      <div className="max-w-7xl  mx-auto lg:p-6">
-        <div className="lg:grid lg:grid-cols-[320px_1fr] lg:gap-6">
-          {/* HEADER SECTION */}
-          <header
-            className="
-                bg-white
-                p-5
-                border-b
-                border-slate-100
-                lg:rounded-3xl
-                lg:sticky
-                lg:top-6
-                lg:h-fit
-                lg:border
-                lg:shadow-sm">
+    <div className="min-h-screen bg-slate-50 text-slate-800 antialiased pb-32 md:pb-12">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
 
-            <h1 className="text-xl font-bold tracking-tight mb-3">
-              🥕 My Smart Fridge
-            </h1>
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
 
-            {/* Search Bar */}
+          <header className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm lg:sticky lg:top-6 lg:h-fit space-y-4">
+            <div>
+              <h1 className="text-xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+                <span>🥕</span> My Smart Fridge
+              </h1>
+              <p className="text-xs text-slate-400 font-medium mt-0.5">Select items to instantly calculate health macros</p>
+            </div>
+
             <div className="relative">
-              <Search
-                className="absolute left-3 top-3 text-slate-400"
-                size={18}
-              />
+              <Search className="absolute left-3 top-3 text-slate-400" size={16} />
               <input
                 type="text"
-                placeholder="Search ingredients (e.g., Paneer, Oats)..."
-                className="w-full bg-slate-100 pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:bg-white transition-all border border-transparent focus:border-emerald-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search ingredients..."
+                className="w-full bg-slate-50 pl-9 pr-4 py-2.5 rounded-xl text-xs border border-transparent focus:outline-none focus:border-emerald-500 focus:bg-white transition-all focus:ring-4 focus:ring-emerald-100"
               />
             </div>
 
-            {/* Selection Counter */}
+            <button 
+              onClick={handleCameraClick}
+              className="hidden lg:flex w-full bg-slate-50 border border-slate-200 hover:border-emerald-500 hover:text-emerald-600 text-slate-600 rounded-xl p-3 text-xs font-bold items-center justify-center gap-2 transition-all active:scale-95"
+            >
+              <Camera size={16} />
+              Scan Fridge Image
+            </button>
+
             {selected.length > 0 && (
-              <div className="mt-3 text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg flex items-center gap-1.5 animate-fade-in">
-                <CheckCircle2 size={14} />
-                <span>{selected.length} items selected to cook with</span>
+              <div className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 p-3 rounded-xl flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-emerald-600" />
+                <span>{selected.length} items staged to cook</span>
               </div>
             )}
           </header>
 
-          {/* INGREDIENTS GRID */}
-          <main className="p-4 lg:p-0 space-y-8">
-            {Object.entries(INGREDIENTS_DATA).map(([category, items]) => (
-              <div key={category}>
-                <h2 className="mx-5 mb-4 text-sm font-bold text-slate-600">
-                  {category}
-                </h2>
+          <main className="space-y-6">
+            {Object.entries(INGREDIENTS_DATA).map(([category, items]) => {
+              const filteredItems = items.filter(item => 
+                item.name.toLowerCase().includes(searchQuery.toLowerCase())
+              );
 
-                <div
-                  className="mx-5 grid
-                              grid-cols-2
-                              sm:grid-cols-3
-                              md:grid-cols-4
-                              xl:grid-cols-5
-                              2xl:grid-cols-6
-                              gap-4">
-                  {items.map((item) => {
-                    const isSelected = selected.includes(item.id);
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => toggleIngredient(item.id)}
-                        className={`group
-                                      p-4
-                                      rounded-2xl
-                                      flex
-                                      flex-col
-                                      items-center
-                                      justify-center
-                                      border
-                                      relative
-                                      transition-all
-                                      duration-200
-                                      ${
-                                        isSelected
-                                          ? "bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-500 shadow-md scale-[0.98]"
-                                          : "bg-white border-slate-200 hover:border-emerald-300 hover:shadow-md"
-                                      }
-                                    `}
-                      >
-                        {/* Checkmark badge for selected items */}
-                        {isSelected && (
-                          <div className="absolute top-1 right-1 text-emerald-600 bg-white rounded-full">
-                            <CheckCircle2
-                              size={14}
-                              fill="currentColor"
-                              className="text-white fill-emerald-600"
-                            />
-                          </div>
-                        )}
-                        <span className="text-4xl mb-2 select-none transition-transform group-hover:scale-110">
-                          {item.emoji}
-                        </span>
-                        <span
-                          className={`text-xs font-semibold ${isSelected ? "text-emerald-700" : "text-slate-700"}`}
+              if (filteredItems.length === 0) return null;
+
+              return (
+                <div key={category} className="bg-white p-5 rounded-3xl border border-slate-100/80 shadow-sm space-y-4">
+                  <h2 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">
+                    {category}
+                  </h2>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
+                    {filteredItems.map((item) => {
+                      const isSelected = selected.includes(item.id);
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => toggleIngredient(item.id)}
+                          className={`group p-4 rounded-2xl flex flex-col items-center justify-center border transition-all duration-200 relative ${
+                            isSelected
+                              ? "bg-emerald-50/60 border-emerald-500 shadow-sm scale-[0.98]"
+                              : "bg-white border-slate-100 hover:border-slate-300 shadow-sm"
+                          }`}
                         >
-                          {item.name}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          {isSelected && (
+                            <div className="absolute top-1.5 right-1.5 text-emerald-600 bg-white rounded-full shadow-sm">
+                              <CheckCircle2 size={14} fill="currentColor" className="text-white fill-emerald-600" />
+                            </div>
+                          )}
+                          <span className="text-3xl mb-2 select-none group-hover:scale-110 transition-transform">
+                            {item.emoji}
+                          </span>
+                          <span className={`text-xs font-bold ${isSelected ? "text-emerald-700" : "text-slate-600"}`}>
+                            {item.name}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </main>
 
-          <button
-            onClick={handleCameraClick}
-            className="
-                    fixed
-                    bottom-36
-                    right-4
-                    md:right-6
-                    lg:hidden
-                    z-50
-
-                    h-16
-                    w-16
-
-                    rounded-full
-                    bg-gradient-to-r
-                    from-emerald-500
-                    to-green-600
-
-                    text-white
-                    shadow-xl
-
-                    flex
-                    items-center
-                    justify-center
-
-                    hover:scale-105
-                    active:scale-95
-                    transition-all">
-            <Camera size={28} />
-          </button>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={handleImageSelect} />
-
-{preview && (
-  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    
-    <div className="bg-white rounded-3xl overflow-hidden max-w-md w-full">
-      
-      <img
-        src={preview}
-        alt="Fridge Preview"
-        className="w-full h-80 object-cover"
-      />
-
-      <div className="p-4 space-y-3">
-        <h3 className="font-bold text-lg">
-          Analyze Fridge Photo?
-        </h3>
-
-        <p className="text-sm text-slate-500">
-          We'll detect ingredients automatically.
-        </p>
-        <div className="flex gap-3">
-          
-          <button
-            onClick={() => {
-              setPreview(null);
-              setSelectedFile(null);
-            }}
-            className="flex-1 py-3 rounded-xl border border-slate-200 font-semibold"
-          >
-            Retake
-          </button>
-
-          <button
-            onClick={handleAnalyze}
-            disabled={isAnalyzing}
-            className="flex-1 py-3 rounded-xl bg-emerald-600 text-white font-semibold"
-          >
-            {isAnalyzing
-              ? "Analyzing..."
-              : "Analyze"}
-          </button>
         </div>
       </div>
-    </div>
+
+      <button
+        onClick={handleCameraClick}
+        className="fixed bottom-24 right-4 md:right-6 lg:hidden z-40 h-14 w-14 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all border border-slate-700"
+      >
+        <Camera size={22} />
+      </button>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={handleImageSelect}
+      />
+
+      {preview && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl overflow-hidden max-w-sm w-full border border-slate-100 shadow-2xl animate-scale-in">
+            <div className="relative w-full h-64 bg-slate-900 flex items-center justify-center">
+              <img src={preview} alt="Fridge Capture" className="w-full h-full object-cover" />
+              <button 
+                disabled={isAnalyzing}
+                onClick={() => { setPreview(null); setSelectedFile(null); }}
+                className="absolute top-3 right-3 p-1.5 bg-slate-900/60 hover:bg-slate-900 text-white rounded-xl backdrop-blur-sm transition-all"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <div>
+                <h3 className="font-black text-slate-900 text-base">Analyze Fridge Image?</h3>
+                <p className="text-xs text-slate-400 font-medium mt-0.5">Gemini Vision will automatically parse your available stock items.</p>
+              </div>
+              
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setPreview(null); setSelectedFile(null); }}
+                  disabled={isAnalyzing}
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+                >
+                  Retake
+                </button>
+                <button
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing}
+                  className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-emerald-100 disabled:opacity-80 transition-all"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      Parsing...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={14} />
+                      Analyze
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      {selected.length > 0 && (
+  <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-100 via-slate-100 to-transparent pt-12 z-50 flex justify-center pointer-events-none">
+    <button 
+      onClick={() => console.log("Finding recipes for:", selected)}
+      className="w-full max-w-md bg-slate-900 hover:bg-slate-800 text-white p-4 rounded-2xl font-black text-xs uppercase tracking-wider shadow-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] pointer-events-auto cursor-pointer"
+    >
+      <Sparkles size={16} className="text-amber-400 fill-amber-400" />
+      Find Healthy Recipes ({selected.length})
+    </button>
   </div>
 )}
 
-
-          {selected.length > 0 && (
-            <div className="fixed bottom-16 left-0 right-0 p-4 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent pt-8">
-              <button className="w-full bg-slate-900 text-white p-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-all active:scale-[0.98] animate-bounce-subtle">
-                <Sparkles size={18} className="text-amber-400 fill-amber-400" />
-                Find Healthy Recipes ({selected.length})
-              </button>
-            </div>
-          )}
-
-        </div>
-      </div>
     </div>
   );
 }
