@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ChevronRight, Flame, Clock3, Search, Refrigerator, Sparkles } from "lucide-react";
+import { ChevronRight, Flame, Clock3, Refrigerator } from "lucide-react";
 import Image from "next/image";
 import chilla from "@/src/assets/chilla.png";
 import Link from "next/link";

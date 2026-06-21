@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Carrot, User, CookingPot } from "lucide-react";
+import { Home, Refrigerator, User, CookingPot } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 interface NavItemProps {
@@ -61,7 +61,7 @@ export default function BottomNavigation() {
 
         <NavItem
           href="/dashboard/fridge"
-          icon={<Carrot size={22} />}
+          icon={<Refrigerator size={22} />}
           label="Fridge"
           active={pathname === "/dashboard/fridge"}
         />
