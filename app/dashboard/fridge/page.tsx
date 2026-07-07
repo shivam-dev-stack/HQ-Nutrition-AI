@@ -1,6 +1,13 @@
 "use client";
 import { useState, useRef } from "react";
-import { Search, Sparkles, CheckCircle2, Camera, X, Loader2 } from "lucide-react";
+import {
+  Search,
+  Sparkles,
+  CheckCircle2,
+  Camera,
+  X,
+  Loader2,
+} from "lucide-react";
 
 const INGREDIENTS_DATA = {
   "Veggies & Fruits": [
@@ -83,19 +90,22 @@ export default function Fridge() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 antialiased pb-32 md:pb-12">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
-
           <header className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm lg:sticky lg:top-6 lg:h-fit space-y-4">
             <div>
               <h1 className="text-xl font-black tracking-tight text-slate-900 flex items-center gap-2">
                 <span>🥕</span> My Smart Fridge
               </h1>
-              <p className="text-xs text-slate-400 font-medium mt-0.5">Select items to instantly calculate health macros</p>
+              <p className="text-xs text-slate-400 font-medium mt-0.5">
+                Select items to instantly calculate health macros
+              </p>
             </div>
 
             <div className="relative">
-              <Search className="absolute left-3 top-3 text-slate-400" size={16} />
+              <Search
+                className="absolute left-3 top-3 text-slate-400"
+                size={16}
+              />
               <input
                 type="text"
                 value={searchQuery}
@@ -105,7 +115,7 @@ export default function Fridge() {
               />
             </div>
 
-            <button 
+            <button
               onClick={handleCameraClick}
               className="hidden lg:flex w-full bg-slate-50 border border-slate-200 hover:border-emerald-500 hover:text-emerald-600 text-slate-600 rounded-xl p-3 text-xs font-bold items-center justify-center gap-2 transition-all active:scale-95"
             >
@@ -123,14 +133,17 @@ export default function Fridge() {
 
           <main className="space-y-6">
             {Object.entries(INGREDIENTS_DATA).map(([category, items]) => {
-              const filteredItems = items.filter(item => 
-                item.name.toLowerCase().includes(searchQuery.toLowerCase())
+              const filteredItems = items.filter((item) =>
+                item.name.toLowerCase().includes(searchQuery.toLowerCase()),
               );
 
               if (filteredItems.length === 0) return null;
 
               return (
-                <div key={category} className="bg-white p-5 rounded-3xl border border-slate-100/80 shadow-sm space-y-4">
+                <div
+                  key={category}
+                  className="bg-white p-5 rounded-3xl border border-slate-100/80 shadow-sm space-y-4"
+                >
                   <h2 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">
                     {category}
                   </h2>
@@ -150,13 +163,19 @@ export default function Fridge() {
                         >
                           {isSelected && (
                             <div className="absolute top-1.5 right-1.5 text-emerald-600 bg-white rounded-full shadow-sm">
-                              <CheckCircle2 size={14} fill="currentColor" className="text-white fill-emerald-600" />
+                              <CheckCircle2
+                                size={14}
+                                fill="currentColor"
+                                className="text-white fill-emerald-600"
+                              />
                             </div>
                           )}
                           <span className="text-3xl mb-2 select-none group-hover:scale-110 transition-transform">
                             {item.emoji}
                           </span>
-                          <span className={`text-xs font-bold ${isSelected ? "text-emerald-700" : "text-slate-600"}`}>
+                          <span
+                            className={`text-xs font-bold ${isSelected ? "text-emerald-700" : "text-slate-600"}`}
+                          >
                             {item.name}
                           </span>
                         </button>
@@ -167,7 +186,6 @@ export default function Fridge() {
               );
             })}
           </main>
-
         </div>
       </div>
 
@@ -191,10 +209,17 @@ export default function Fridge() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl overflow-hidden max-w-sm w-full border border-slate-100 shadow-2xl animate-scale-in">
             <div className="relative w-full h-64 bg-slate-900 flex items-center justify-center">
-              <img src={preview} alt="Fridge Capture" className="w-full h-full object-cover" />
-              <button 
+              <img
+                src={preview}
+                alt="Fridge Capture"
+                className="w-full h-full object-cover"
+              />
+              <button
                 disabled={isAnalyzing}
-                onClick={() => { setPreview(null); setSelectedFile(null); }}
+                onClick={() => {
+                  setPreview(null);
+                  setSelectedFile(null);
+                }}
                 className="absolute top-3 right-3 p-1.5 bg-slate-900/60 hover:bg-slate-900 text-white rounded-xl backdrop-blur-sm transition-all"
               >
                 <X size={16} />
@@ -203,13 +228,21 @@ export default function Fridge() {
 
             <div className="p-5 space-y-4">
               <div>
-                <h3 className="font-black text-slate-900 text-base">Analyze Fridge Image?</h3>
-                <p className="text-xs text-slate-400 font-medium mt-0.5">Gemini Vision will automatically parse your available stock items.</p>
+                <h3 className="font-black text-slate-900 text-base">
+                  Analyze Fridge Image?
+                </h3>
+                <p className="text-xs text-slate-400 font-medium mt-0.5">
+                  Gemini Vision will automatically parse your available stock
+                  items.
+                </p>
               </div>
-              
+
               <div className="flex gap-2">
                 <button
-                  onClick={() => { setPreview(null); setSelectedFile(null); }}
+                  onClick={() => {
+                    setPreview(null);
+                    setSelectedFile(null);
+                  }}
                   disabled={isAnalyzing}
                   className="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors"
                 >
@@ -238,19 +271,16 @@ export default function Fridge() {
         </div>
       )}
 
-
       {selected.length > 0 && (
-  <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-100 via-slate-100 to-transparent pt-12 z-50 flex justify-center pointer-events-none">
-    <button 
-      onClick={() => console.log("Finding recipes for:", selected)}
-      className="w-full max-w-md bg-slate-900 hover:bg-slate-800 text-white p-4 rounded-2xl font-black text-xs uppercase tracking-wider shadow-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] pointer-events-auto cursor-pointer"
-    >
-      <Sparkles size={16} className="text-amber-400 fill-amber-400" />
-      Find Healthy Recipes ({selected.length})
-    </button>
-  </div>
-)}
-
+        <div className="fixed bottom-16 md:bottom-4 left-0 right-0 p-4 md:pb-20 bg-gradient-to-t from-slate-50 via-slate-50/90 to-transparent pt-8 z-40 flex justify-center pointer-events-none">
+          <button
+            onClick={() => console.log("Finding recipes for:", selected)}
+            className="w-full max-w-md bg-slate-900 hover:bg-slate-800 text-white p-4 rounded-2xl font-black text-xs uppercase tracking-wider shadow-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] pointer-events-auto cursor-pointer"
+          >
+            Find Healthy Recipes ({selected.length})
+          </button>
+        </div>
+      )}
     </div>
   );
 }

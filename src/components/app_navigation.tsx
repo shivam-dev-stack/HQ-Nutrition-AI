@@ -11,23 +11,20 @@ interface NavItemProps {
   active?: boolean;
 }
 
-function NavItem({
-  href,
-  icon,
-  label,
-  active,
-}: NavItemProps) {
+function NavItem({ href, icon, label, active }: NavItemProps) {
   return (
     <Link
       href={href}
-      className={`flex flex-col items-center gap-1 transition-colors ${
+      className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all duration-200 active:scale-95 ${
         active
-          ? "text-emerald-600 font-semibold"
-          : "text-slate-500 hover:text-slate-700"
+          ? "text-emerald-600 font-bold bg-emerald-50/60"
+          : "text-slate-500 hover:text-slate-700 font-medium"
       }`}
     >
-      {icon}
-      <span className="text-xs">{label}</span>
+      <div className={`transition-transform duration-200 ${active ? "scale-110" : ""}`}>
+        {icon}
+      </div>
+      <span className="text-[10px] tracking-wide capitalize">{label}</span>
     </Link>
   );
 }
@@ -35,50 +32,48 @@ function NavItem({
 export default function BottomNavigation() {
   const pathname = usePathname();
 
+  // Helper function to check dynamic nesting rules safely
+  const isLinkActive = (href: string) => {
+    if (href === "/dashboard") {
+      return pathname === "/dashboard"; // Exact check explicitly for core dashboard path
+    }
+    return pathname.startsWith(href); // StartsWith matching ensures nested layouts retain active status
+  };
+
   return (
-    <nav
-      className="
-        fixed
-        bottom-0
-        left-0
-        right-0
-        z-50
-        border-t
-        border-slate-200
-        bg-white/95
-        backdrop-blur
-        py-3
+    // FIXED: Added md:hidden to hide this component natively on tablets and monitors. 
+    // Desktop layout uses the vertical collapsible sidebars we designed earlier!
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-100 bg-white/90 backdrop-blur-md py-2 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
+      <div className="max-w-md mx-auto flex justify-around items-center px-2">
         
-      "
-    >
-      <div className="flex justify-around">
         <NavItem
           href="/dashboard"
-          icon={<Home size={22} />}
+          icon={<Home size={20} />}
           label="Home"
-          active={pathname === "/dashboard"}
+          active={isLinkActive("/dashboard")}
         />
 
         <NavItem
           href="/dashboard/fridge"
-          icon={<Refrigerator size={22} />}
+          icon={<Refrigerator size={20} />}
           label="Fridge"
-          active={pathname === "/dashboard/fridge"}
+          active={isLinkActive("/dashboard/fridge")}
         />
 
         <NavItem
           href="/dashboard/recipes"
-          icon={<CookingPot size={22} />}
-          label="recipes"
-          active={pathname === "/dashboard/recipes"}
+          icon={<CookingPot size={20} />}
+          label="Recipes"
+          active={isLinkActive("/dashboard/recipes")}
         />
 
         <NavItem
           href="/dashboard/profile"
-          icon={<User size={22} />}
+          icon={<User size={20} />}
           label="Profile"
-          active={pathname === "/dashboard/profile"}
+          active={isLinkActive("/dashboard/profile")}
         />
+
       </div>
     </nav>
   );

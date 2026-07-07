@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   User,
   Target,
@@ -26,6 +26,45 @@ export default function Profile() {
       setNewAllergy("");
     }
   };
+
+  const saveProfile = () => {
+    // Implement the logic to save the profile data to the backend
+    const profileData = {
+      diet,
+      allergies,
+      height: 170, // Example height
+      weight: 82,  // Example weight
+      age: 28,     // Example age
+      activity_level: "moderate", // Example activity level
+      current_goal: "muscle_gain", // Example goal
+      // Add other profile fields as needed
+    };
+   console.log("Saving profile data:", profileData);
+    // You can use fetch or axios to send this data to your backend API
+    const token = localStorage.getItem("access");
+    fetch("http://localhost:8000/api/profile/", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(profileData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Profile updated successfully:", data);
+        setIsOpen(false); 
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+      });
+  };
+
 
   return (
     <div className="min-h-screen bg-slate-50/60 text-slate-800 font-sans antialiased pb-24 selection:bg-emerald-100">
@@ -239,7 +278,7 @@ export default function Profile() {
               </button>
             </div>
 
-            <form onSubmit={(e) => { e.preventDefault(); setIsOpen(false); }} className="p-5 space-y-4">
+            <form onSubmit={saveProfile} className="p-5 space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Profile Name</label>
                 <input type="text" defaultValue="Shivam" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white" />
