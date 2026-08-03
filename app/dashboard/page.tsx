@@ -32,9 +32,9 @@ export default function DashboardPage() {
         setProfileData(data);
         
         // Dynamic Setup Configuration Redirect Gate
-        if (!data.name || !data.age || !data.weight || !data.height || !data.activity_level) {
-          router.push("/dashboard/profile");
-        }
+        // if (!data.name || !data.age || !data.weight || !data.height || !data.activity_level) {
+        //   router.push("/dashboard/profile");
+        // }
       } catch (error) {
         console.error("Profile fetch failed:", error);
       }
