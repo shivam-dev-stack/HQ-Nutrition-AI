@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sparkles, ArrowRight, ShieldCheck, Zap, Lock, User, Eye, EyeOff, Loader2 } from "lucide-react";
 import Logo from "@/src/components/logo";
-import api from "@/src/lib/api";
+import {apiRequest} from "@/src/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  
 
   const [formData, setFormData] = useState({
     username: "",
@@ -28,25 +28,30 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true);
-      const response = await api.post("/api/login/", formData);
-      const { access } = response.data;
-      
-      if (typeof window !== "undefined") {
-        localStorage.setItem("access", access);
-      }
+  e.preventDefault();
 
-      console.log("Login successful:", response.data);
-      router.push("/dashboard");
-    } catch (error: any) {
-      console.error("Login failed:", error);
-      setAuthError(error.response?.data?.detail || "Invalid username or password credentials.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  setIsLoading(true);
+
+  const { data, error } = await apiRequest("/api/login/", {
+    method: "POST",
+    body: formData,
+  });
+
+  setIsLoading(false);
+
+  if (error) {
+    setAuthError(error);
+    return;
+  }
+
+  const token = data?.token;
+
+  if (token) {
+    localStorage.setItem("access", token);
+  }
+
+  router.push("/dashboard");
+};
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-emerald-100 flex flex-col lg:flex-row">

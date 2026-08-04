@@ -21,7 +21,7 @@ import {
   Target 
 } from "lucide-react";
 import Logo from "@/src/components/logo";
-import api from "@/src/lib/api";
+import {apiRequest} from "@/src/lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -53,27 +53,24 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
+  
       setIsLoading(true);
       
       // API request body formatted with demographic & dietary profile fields
-      const response = await api.post("/api/register/", {
+      const {response,error} = await api.post("/api/register/",method:"POST", body:{ 
         ...formData,
         age: Number(formData.age),
         weight: Number(formData.weight),
         height: Number(formData.height),
       });
 
-      console.log("Registration successful:", response.data);
-      router.push("/login");
-    } catch (error: any) {
-      console.error("Registration failed:", error);
-      setAuthError(
-        error.response?.data?.detail || "Registration failed. Please check your details."
-      );
-    } finally {
       setIsLoading(false);
-    }
+
+      if (error) {
+        setAuthError(error);
+        return;
+      }
+      router.push("/login");
   };
 
   return (
