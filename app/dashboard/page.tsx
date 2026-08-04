@@ -5,43 +5,49 @@ import Image from "next/image";
 import chilla from "@/src/assets/chilla.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { apiRequest } from "@/src/lib/api";
+
 
 export default function DashboardPage() {
   const router = useRouter();
   const [profileData, setProfileData] = useState(null);
 
   useEffect(() => {
-    async function callProfile() {
-      const isBrowser = typeof window !== 'undefined';
-      const token = isBrowser ? localStorage.getItem("access") : null;
+  async function callProfile() {
+    const isBrowser = typeof window !== "undefined";
+    const token = isBrowser ? localStorage.getItem("access") : null;
 
-      if (!token) {
-        console.warn("No access token found or executing on the server.");
-        return; 
-      }
-
-      try {
-        const profile = await axios.get("http://localhost:8000/api/profile/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        
-        const data = profile.data;
-        setProfileData(data);
-        
-        // Dynamic Setup Configuration Redirect Gate
-        // if (!data.name || !data.age || !data.weight || !data.height || !data.activity_level) {
-        //   router.push("/dashboard/profile");
-        // }
-      } catch (error) {
-        console.error("Profile fetch failed:", error);
-      }
+    if (!token) {
+      console.warn("No access token found, redirecting to login...");
+      router.push("/login");
+      return;
     }
 
-    callProfile();
-  }, [router]); 
+    try {
+      // 1. Destructure 'data' instead of 'profile'
+      const { data, error } = await apiRequest("/api/me/", {
+        method: "GET",
+      });
+
+      if (error) {
+        console.error("Profile fetch error:", error);
+        return;
+      }
+
+      setProfileData(data);
+      console.log("Profile data fetched successfully:", data);
+
+      // Dynamic Onboarding Redirect Gate
+      if (!data?.age || !data?.weight || !data?.height || !data?.goal) {
+        router.push("/dashboard/profile");
+      }
+    } catch (error) {
+      console.error("Profile fetch failed:", error);
+    }
+  }
+
+  callProfile();
+}, [router]);
 
   return (
     <main className="min-h-screen bg-slate-50/70 text-slate-800 antialiased pb-24">
@@ -56,7 +62,7 @@ export default function DashboardPage() {
             <div className="space-y-4 text-center lg:text-left">
               <div>
                 <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white">
-                  👋 Hi {profileData?.name || "Shivam"}!
+                  👋 Hi {profileData?.username || "User"}!
                 </h1>
                 <p className="text-xs text-emerald-400 font-medium tracking-wide mt-1 uppercase">
                   Fuel Budget Overview Dashboard

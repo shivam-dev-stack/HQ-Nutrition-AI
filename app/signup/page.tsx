@@ -57,12 +57,12 @@ export default function RegisterPage() {
       setIsLoading(true);
       
       // API request body formatted with demographic & dietary profile fields
-      const {response,error} = await api.post("/api/register/",method:"POST", body:{ 
+      const {response,error} = await apiRequest("/api/register/",{method:"POST", body:{ 
         ...formData,
         age: Number(formData.age),
         weight: Number(formData.weight),
         height: Number(formData.height),
-      });
+      }});
 
       setIsLoading(false);
 

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   User,
   Target,
@@ -12,10 +12,14 @@ import {
   X,
   Plus,
 } from "lucide-react";
+import { useUser } from "@/src/context/UserContext";
+import { apiRequest } from "@/src/lib/api";
+
+
 
 export default function Profile() {
   const [diet, setDiet] = useState("veg");
-  const [allergies, setAllergies] = useState(["Gluten", "Peanuts"]);
+  const [allergies, setAllergies] = useState([]);
   const [isopen, setIsOpen] = useState(false);
   const [newAllergy, setNewAllergy] = useState("");
 
@@ -26,6 +30,17 @@ export default function Profile() {
       setNewAllergy("");
     }
   };
+
+const { user, loading } = useUser();
+
+ 
+useEffect(() => {
+    if (user) {
+      setNewAllergy(user.allergies || "");
+    }
+  }, [user]);
+
+
 
   const saveProfile = () => {
     // Implement the logic to save the profile data to the backend
@@ -42,28 +57,25 @@ export default function Profile() {
    console.log("Saving profile data:", profileData);
     // You can use fetch or axios to send this data to your backend API
     const token = localStorage.getItem("access");
-    fetch("http://localhost:8000/api/profile/", {
-      method: "PUT",
+    const {data, error} = apiRequest("/api/user/profile", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(profileData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Profile updated successfully:", data);
-        setIsOpen(false); 
-      })
-      .catch((error) => {
-        console.error("Error updating profile:", error);
-      });
+    });
+    if(data) {
+      console.log("Profile saved successfully:", data);
+      setIsOpen(false);
+    } else {
+      console.error("Error saving profile:", error);
+    }
+
   };
+
+   if (loading) return <div>Loading...</div>;
+  if (!user) return <div>No user data available.</div>;
 
 
   return (
@@ -85,16 +97,15 @@ export default function Profile() {
               </div>
 
               <h1 className="text-xl font-black tracking-tight text-white z-10">
-                Shivam
+                {user.username}
               </h1>
-              <p className="text-xs text-emerald-400/90 font-semibold tracking-wider uppercase mt-1 z-10">
+              {/* <p className="text-xs text-emerald-400/90 font-semibold tracking-wider uppercase mt-1 z-10">
                 ML & AI Builder
-              </p>
+              </p> */}
               
               <button
                 onClick={() => setIsOpen(true)}
-                className="mt-4 w-full sm:w-auto lg:w-full px-5 py-2.5 text-xs font-bold tracking-wide text-white bg-white/10 hover:bg-white/20 active:scale-95 border border-white/10 rounded-xl backdrop-blur-md transition-all shadow-sm z-10"
-              >
+                className="mt-4 w-full sm:w-auto lg:w-full px-5 py-2.5 text-xs font-bold tracking-wide text-white bg-white/10 hover:bg-white/20 active:scale-95 border border-white/10 rounded-xl backdrop-blur-md transition-all shadow-sm z-10">
                 Edit Profile Config
               </button>
             </header>
@@ -110,8 +121,7 @@ export default function Profile() {
                     Current Goal
                   </span>
                   <span className="text-sm font-black text-slate-800">
-                    Muscle Gain
-                  </span>
+                    {user.goal}</span>
                 </div>
               </div>
 
@@ -141,9 +151,8 @@ export default function Profile() {
                   </h2>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { id: "veg", label: "Pure Veg", activeClass: "bg-emerald-50 text-emerald-700 border-emerald-500 font-bold" },
-                      { id: "egg", label: "Eggitarian", activeClass: "bg-amber-50 text-amber-700 border-amber-500 font-bold" },
-                      { id: "nonveg", label: "Non-Veg", activeClass: "bg-red-50 text-red-700 border-red-500 font-bold" },
+                      { id: user.diet_preference, label: user.diet_preference, activeClass: "bg-emerald-50 text-emerald-700 border-emerald-500 font-bold" },
+                      
                     ].map((item) => (
                       <button
                         key={item.id}
@@ -247,15 +256,15 @@ export default function Profile() {
                 <div className="grid grid-cols-3 gap-2">
                   <div className="bg-slate-50 rounded-xl p-3 border border-slate-100/60 text-center">
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Age</p>
-                    <p className="text-sm sm:text-base font-black text-slate-800 mt-0.5">28</p>
+                    <p className="text-sm sm:text-base font-black text-slate-800 mt-0.5">{user.age}</p>
                   </div>
                   <div className="bg-slate-50 rounded-xl p-3 border border-slate-100/60 text-center">
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider truncate">Hgt</p>
-                    <p className="text-sm sm:text-base font-black text-slate-800 mt-0.5">170<span className="text-[10px] font-bold text-slate-400 ml-0.5">cm</span></p>
+                    <p className="text-sm sm:text-base font-black text-slate-800 mt-0.5">{user.height}<span className="text-[10px] font-bold text-slate-400 ml-0.5">cm</span></p>
                   </div>
                   <div className="bg-slate-50 rounded-xl p-3 border border-slate-100/60 text-center">
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider truncate">Wgt</p>
-                    <p className="text-sm sm:text-base font-black text-slate-800 mt-0.5">82<span className="text-[10px] font-bold text-slate-400 ml-0.5">kg</span></p>
+                    <p className="text-sm sm:text-base font-black text-slate-800 mt-0.5">{user.weight}<span className="text-[10px] font-bold text-slate-400 ml-0.5">kg</span></p>
                   </div>
                 </div>
               </section>

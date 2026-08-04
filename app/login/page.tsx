@@ -44,11 +44,14 @@ export default function LoginPage() {
     return;
   }
 
-  const token = data?.token;
+  const token = data.access;
+  console.log("Received token:", token);
 
-  if (token) {
-    localStorage.setItem("access", token);
+  if (!token) {
+    setAuthError("No token received from server.");
+    return;
   }
+  localStorage.setItem("access", token);
 
   router.push("/dashboard");
 };
